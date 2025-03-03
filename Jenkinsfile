@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch : 'main' , url: 'git@github.com:semarmehdi/paycare.git', credentialsId: 'github-ssh-key'
+                git branch : 'main' , url: 'https://github.com/semarmehdi/paycare.git'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t mehdipaycare .'
+                sh 'docker build -t ${DOCKER_IMAGE} .
             }
         }
 
@@ -42,7 +42,7 @@ pipeline {
                     sh 'echo "employee_id,employee_name,salary\n101,Alice,5000\n102,Bob,7000" > input_data.csv'
 
                     // Run the Docker container with mounted input/output files
-                    sh 'docker run --rm -v $(pwd)/input_data.csv:/app/input_data.csv -v $(pwd)/output_data.csv:/app/output_data.csv mehdipaycare'
+                    sh 'docker run --rm -v $(pwd)/input_data.csv:/app/input_data.csv -v $(pwd)/output_data.csv:/app/output_data.csv ${DOCKER_IMAGE}'
                 }
             }
         }
