@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Install pip') {
             steps {
-                sh 'python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt'
+                sh 'python -m pip install --upgrade pip && python -m pip install -r requirements.txt'
             }
         }
 
@@ -18,11 +18,11 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         sh 'pip install -r requirements.txt'
+        //     }
+        // }
 
         stage('Run Unit Tests') {
             steps {
