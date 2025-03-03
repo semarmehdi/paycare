@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch : 'main' , url: 'https://github.com/semarmehdi/paycare-etl.git'
+                git branch : 'main' , url: 'https://github.com/semarmehdi/paycare-etl.git', credentialsId: 'github-ssh-key'
             }
         }
 
