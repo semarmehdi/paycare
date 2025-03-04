@@ -80,7 +80,7 @@ pipeline {
 
         stage('Build Test Container') {
             steps {
-                sh 'docker build -t ${TEST_IMAGE} ./tests'
+                sh 'docker build -t ${TEST_IMAGE} -f tests/Dockerfile .'
             }
         }
 
