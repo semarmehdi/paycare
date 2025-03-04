@@ -68,6 +68,7 @@ pipeline {
         ETL_IMAGE = 'paycare-etl'
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION = 'eu-north-1' 
     }
 
     stages {
@@ -84,11 +85,23 @@ pipeline {
             }
         }
 
-        stage('Run Tests in Docker') {
+        stage('Run Unit Tests') {
             steps {
-                sh 'docker run --rm ${TEST_IMAGE}'
+                sh '''
+                    docker run --rm \
+                        --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+                        --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+                        --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+                        paycare-tests
+            '''
             }
         }
+
+        // stage('Run Tests in Docker') {
+        //     steps {
+        //         sh 'docker run --rm ${TEST_IMAGE}'
+        //     }
+        // }
 
         // stage('Upload Test Results to S3') {
         //     steps {
@@ -105,7 +118,7 @@ pipeline {
             //     }
             // }
             steps {
-                sh 'docker build -t ${ETL_IMAGE} etl/'
+                sh 'docker build -t ${ETL_IMAGE} .'
             }
         }
 
