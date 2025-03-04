@@ -1,65 +1,3 @@
-// pipeline {
-//     agent any
-
-//     environment {
-//         DOCKER_IMAGE = 'paycare-etl'
-//     }
-
-//     stages {
-        
-//         stage('Clone Repository') {
-//             steps {
-//                 git branch : 'main' , url: 'https://github.com/semarmehdi/paycare.git'
-//             }
-//         }
-
-//         stage('Install Dependencies') {
-//             steps {
-//                 sh 'pip install -r requirements.txt'
-//             }
-//         }
-
-//         stage('Run Unit Tests') {
-//             steps {
-//                 sh 'pytest --junitxml=unit-tests.xml'
-//             }
-//             post {
-//                 always {
-//                     junit 'unit-tests.xml'  // Publish test results
-//                 }
-//             }
-//         }
-
-//         stage('Build Docker Image') {
-//             steps {
-//                 sh 'docker build -t ${DOCKER_IMAGE} .'
-//             }
-//         }
-
-    //     stage('Run Docker Container') {
-    //         steps {
-    //             script {
-    //                 // Create input data file dynamically
-    //                 sh 'echo "employee_id,employee_name,salary\n101,Alice,5000\n102,Bob,7000" > input_data.csv'
-
-    //                 // Run the Docker container with mounted input/output files
-    //                 sh 'docker run --rm -v $(pwd)/input_data.csv:/app/input_data.csv -v $(pwd)/output_data.csv:/app/output_data.csv ${DOCKER_IMAGE}'
-    //             }
-    //         }
-    //     }
-    // }
-
-//     post {
-//         success {
-//             echo 'ETL Pipeline completed successfully!'
-//             // Optionally send notification (Slack/Email)
-//         }
-//         failure {
-//             echo 'ETL Pipeline failed.'
-//             // Optionally send notification (Slack/Email)
-//         }
-//     }
-// }
 pipeline {
     agent any
 
@@ -97,98 +35,28 @@ pipeline {
             }
         }
 
-        // stage('Run Tests in Docker') {
-        //     steps {
-        //         sh 'docker run --rm ${TEST_IMAGE}'
-        //     }
-        // }
-
-        // stage('Upload Test Results to S3') {
-        //     steps {
-        //         script {
-        //             sh 'python tests/upload_s3.py'
-        //         }
-        //     }
-        // }
-
         stage('Build ETL Container') {
-            // when {
-            //     expression {
-            //         return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
-            //     }
-            // }
             steps {
                 sh 'docker build -t ${ETL_IMAGE} .'
             }
         }
 
-        // stage('Run ETL in Docker') {
-        //     // when {
-        //     //     expression {
-        //     //         return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
-        //     //     }
-        //     // }
-        //     steps {
-        //         script {
-        //             // Vérifier l'existence des fichiers avant de lancer l'ETL
-        //             sh 'ls -l ${WORKSPACE}/data'
-
-        //             // Exécution de l'ETL avec les bons chemins montés
-        //             sh '''
-        //                 docker run --rm \
-        //                 -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
-        //                 -v ${WORKSPACE}/data/output_data.csv:/app/output_data.csv \
-        //                 ${ETL_IMAGE}
-        //             '''
-
-        //             // Vérifier si le fichier de sortie a été généré
-        //             sh 'ls -l ${WORKSPACE}/data'
-        //         }
-        //     }
-        // }
-
         stage('Run ETL in Docker') {
             steps {
                 script {
-                    // Assurer que output_data.csv est bien un fichier (et non un dossier)
-                    // sh '''
-                    //     rm -rf ${WORKSPACE}/data/output_data.csv  # Supprime tout dossier/fichier existant
-                    //     touch ${WORKSPACE}/data/output_data.csv  # Crée un fichier vide
-                    // '''
-
-                    // // Vérifier que les fichiers sont bien présents avant exécution
-                    // sh 'ls -l ${WORKSPACE}/data'
-
-                    // // Exécution de l'ETL avec les fichiers montés correctement
-                    // sh '''
-                    //     docker run --rm \
-                    //     -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
-                    //     -v ${WORKSPACE}/data/output_data.csv:/app/output_data.csv \
-                    //     ${ETL_IMAGE}
-                    // '''
                     sh '''
                         docker run --rm \
                         -v ${WORKSPACE}/data:/app/data \
                         ${ETL_IMAGE}
                     '''
 
-            // Vérifier si le fichier de sortie a été généré après l'ETL
-            sh 'ls -l ${WORKSPACE}/data'
+                    sh 'ls -l ${WORKSPACE}/data'
                 }
             }
         }
 
     }
 
-    // post {
-    //     success {
-    //         echo 'ETL Pipeline completed successfully!'
-    //     }
-    //     failure {
-    //         echo 'ETL Pipeline failed.'
-    //     }
-    // }
-    
     post {
         success {
             echo '✅ ETL Pipeline completed successfully!'
