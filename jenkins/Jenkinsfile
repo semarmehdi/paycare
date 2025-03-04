@@ -122,18 +122,44 @@ pipeline {
             }
         }
 
+        // stage('Run ETL in Docker') {
+        //     // when {
+        //     //     expression {
+        //     //         return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
+        //     //     }
+        //     // }
+        //     steps {
+        //         script {
+        //             // Vérifier l'existence des fichiers avant de lancer l'ETL
+        //             sh 'ls -l ${WORKSPACE}/data'
+
+        //             // Exécution de l'ETL avec les bons chemins montés
+        //             sh '''
+        //                 docker run --rm \
+        //                 -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
+        //                 -v ${WORKSPACE}/data/output_data.csv:/app/output_data.csv \
+        //                 ${ETL_IMAGE}
+        //             '''
+
+        //             // Vérifier si le fichier de sortie a été généré
+        //             sh 'ls -l ${WORKSPACE}/data'
+        //         }
+        //     }
+        // }
+
         stage('Run ETL in Docker') {
-            // when {
-            //     expression {
-            //         return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
-            //     }
-            // }
             steps {
                 script {
-                    // Vérifier l'existence des fichiers avant de lancer l'ETL
+                    // Assurer que output_data.csv est bien un fichier (et non un dossier)
+                    sh '''
+                        rm -rf ${WORKSPACE}/data/output_data.csv  # Supprime tout dossier/fichier existant
+                        touch ${WORKSPACE}/data/output_data.csv  # Crée un fichier vide
+                    '''
+
+                    // Vérifier que les fichiers sont bien présents avant exécution
                     sh 'ls -l ${WORKSPACE}/data'
 
-                    // Exécution de l'ETL avec les bons chemins montés
+                    // Exécution de l'ETL avec les fichiers montés correctement
                     sh '''
                         docker run --rm \
                         -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
@@ -141,11 +167,12 @@ pipeline {
                         ${ETL_IMAGE}
                     '''
 
-                    // Vérifier si le fichier de sortie a été généré
-                    sh 'ls -l ${WORKSPACE}/data'
+            // Vérifier si le fichier de sortie a été généré après l'ETL
+            sh 'ls -l ${WORKSPACE}/data'
                 }
             }
         }
+
     }
 
     post {

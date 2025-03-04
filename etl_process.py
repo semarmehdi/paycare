@@ -21,10 +21,12 @@ def transform_data(data):
         data_cleaned = data.dropna()
 
         # Add a new column for Tax (assuming a flat 10% tax rate on salary)
-        data_cleaned["tax"] = data_cleaned["salary"] * 0.1
+        # data_cleaned["tax"] = data_cleaned["salary"] * 0.1
+        data_cleaned.loc[:, "tax"] = data_cleaned["salary"] * 0.1
 
         # Calculate net salary after tax
-        data_cleaned["net_salary"] = data_cleaned["salary"] - data_cleaned["tax"]
+        # data_cleaned["net_salary"] = data_cleaned["salary"] - data_cleaned["tax"]
+        data_cleaned.loc[:, "net_salary"] = data_cleaned["salary"] - data_cleaned["tax"]
 
         print("Data transformation successful.")
         return data_cleaned
