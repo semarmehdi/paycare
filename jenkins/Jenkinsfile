@@ -155,7 +155,7 @@ pipeline {
                     //     rm -rf ${WORKSPACE}/data/output_data.csv  # Supprime tout dossier/fichier existant
                     //     touch ${WORKSPACE}/data/output_data.csv  # Crée un fichier vide
                     // '''
-                    
+
                     // // Vérifier que les fichiers sont bien présents avant exécution
                     // sh 'ls -l ${WORKSPACE}/data'
 
@@ -169,7 +169,7 @@ pipeline {
                     sh '''
                         docker run --rm \
                         -v ${WORKSPACE}/data:/app/data \
-                        paycare-etl
+                        ${ETL_IMAGE}
                     '''
 
             // Vérifier si le fichier de sortie a été généré après l'ETL
