@@ -151,20 +151,25 @@ pipeline {
             steps {
                 script {
                     // Assurer que output_data.csv est bien un fichier (et non un dossier)
-                    sh '''
-                        rm -rf ${WORKSPACE}/data/output_data.csv  # Supprime tout dossier/fichier existant
-                        touch ${WORKSPACE}/data/output_data.csv  # Crée un fichier vide
-                    '''
+                    // sh '''
+                    //     rm -rf ${WORKSPACE}/data/output_data.csv  # Supprime tout dossier/fichier existant
+                    //     touch ${WORKSPACE}/data/output_data.csv  # Crée un fichier vide
+                    // '''
+                    
+                    // // Vérifier que les fichiers sont bien présents avant exécution
+                    // sh 'ls -l ${WORKSPACE}/data'
 
-                    // Vérifier que les fichiers sont bien présents avant exécution
-                    sh 'ls -l ${WORKSPACE}/data'
-
-                    // Exécution de l'ETL avec les fichiers montés correctement
+                    // // Exécution de l'ETL avec les fichiers montés correctement
+                    // sh '''
+                    //     docker run --rm \
+                    //     -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
+                    //     -v ${WORKSPACE}/data/output_data.csv:/app/output_data.csv \
+                    //     ${ETL_IMAGE}
+                    // '''
                     sh '''
                         docker run --rm \
-                        -v ${WORKSPACE}/data/input_data.csv:/app/input_data.csv \
-                        -v ${WORKSPACE}/data/output_data.csv:/app/output_data.csv \
-                        ${ETL_IMAGE}
+                        -v ${WORKSPACE}/data:/app/data \
+                        paycare-etl
                     '''
 
             // Vérifier si le fichier de sortie a été généré après l'ETL
