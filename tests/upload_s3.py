@@ -4,7 +4,8 @@ import boto3
 s3_client = boto3.client("s3")
 
 # Définition des paramètres
-file_name = "unit-tests.xml"  # Nom du fichier XML généré par pytest
+# file_name = "unit-tests.xml"  # Nom du fichier XML généré par pytest
+file_name = "results.xml"
 bucket_name = "jedhamehdi"
 s3_key = "test-results/unit-tests.xml"  # Chemin dans le bucket
 
