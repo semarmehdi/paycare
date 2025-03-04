@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copier uniquement les fichiers nécessaires
 COPY tests/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copier le code source et les tests (avec le bon chemin)
 COPY etl_process.py /app/
