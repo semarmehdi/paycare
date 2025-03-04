@@ -90,13 +90,13 @@ pipeline {
             }
         }
 
-        stage('Upload Test Results to S3') {
-            steps {
-                script {
-                    sh 'python tests/upload_s3.py'
-                }
-            }
-        }
+        // stage('Upload Test Results to S3') {
+        //     steps {
+        //         script {
+        //             sh 'python tests/upload_s3.py'
+        //         }
+        //     }
+        // }
 
         stage('Build ETL Container') {
             // when {

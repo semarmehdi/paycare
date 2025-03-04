@@ -5,7 +5,7 @@ s3_client = boto3.client("s3")
 
 # Définition des paramètres
 file_name = "unit-tests.xml"  # Nom du fichier XML généré par pytest
-bucket_name = "ton-bucket-s3"
+bucket_name = "jedhamehdi"
 s3_key = "test-results/unit-tests.xml"  # Chemin dans le bucket
 
 # Upload du fichier
