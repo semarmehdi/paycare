@@ -13,7 +13,7 @@ pipeline {
         
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/semarmehdi/paycare.git'
+                git branch: 'main',credentialsId: 'github-tok-new', url: 'https://github.com/semarmehdi/paycare.git'
             }
         }
 
