@@ -13,5 +13,5 @@ COPY etl_process.py /app/
 COPY tests/test_etl.py tests/upload_s3.py /app/
 
 # Exécuter les tests Pytest au démarrage
-# CMD ["pytest", "test_etl.py", "--junitxml=results.xml"]
+CMD ["pytest", "test_etl.py"]
 # CMD pytest test_etl.py --junitxml=results.xml && python upload_s3.py
